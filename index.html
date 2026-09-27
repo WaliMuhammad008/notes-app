@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Advanced Professional Notes App - Create, organize, and manage your notes with ease">
+    <title>NoteMaster Pro - Advanced Notes App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' fill='%234F46E5'>📝</text></svg>">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="app-title">NoteMaster Pro</h1>
+                    <p class="app-subtitle">Your Advanced Note-Taking Companion</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-theme-toggle" id="themeToggle" title="Toggle dark mode">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="btn-menu" id="menuToggle" title="Open menu">
+                        <span>☰</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Menu -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <h3>Menu</h3>
+                    <button class="btn-close-sidebar" id="closeSidebar">✕</button>
+                </div>
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" data-view="all">
+                        <span class="nav-icon">📋</span> All Notes
+                    </button>
+                    <button class="nav-item" data-view="pinned">
+                        <span class="nav-icon">📌</span> Pinned
+                    </button>
+                    <button class="nav-item" data-view="today">
+                        <span class="nav-icon">📅</span> Today
+                    </button>
+                    <button class="nav-item" data-view="archived">
+                        <span class="nav-icon">📦</span> Archived
+                    </button>
+                </nav>
+                <div class="sidebar-divider"></div>
+                <div class="categories-section">
+                    <h3>Categories</h3>
+                    <div class="categories-list" id="categoriesList"></div>
+                    <button class="btn-add-category" id="addCategoryBtn">+ Add Category</button>
+                </div>
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-actions">
+                    <button class="btn-export" id="exportBtn">
+                        <span>📥</span> Export Notes
+                    </button>
+                    <button class="btn-import" id="importBtn">
+                        <span>📤</span> Import Notes
+                    </button>
+                    <button class="btn-settings" id="settingsBtn">
+                        <span>⚙️</span> Settings
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Search & Filter Bar -->
+            <div class="search-filter-bar">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Search notes... (Ctrl+/)"
+                        autocomplete="off"
+                    >
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="filter-controls">
+                    <select id="sortBy" class="sort-select">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="title">Title (A-Z)</option>
+                        <option value="modified">Recently Modified</option>
+                        <option value="wordcount">Word Count</option>
+                    </select>
+                    <button class="btn-view-toggle" id="viewToggle" title="Toggle grid/list view">
+                        <span>⊞</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-label">Total Notes:</span>
+                    <span class="stat-value" id="totalNotes">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Words:</span>
+                    <span class="stat-value" id="totalWords">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Pinned:</span>
+                    <span class="stat-value" id="pinnedCount">0</span>
+                </div>
+            </div>
+
+            <!-- Notes Container -->
+            <div class="notes-container" id="notesContainer">
+                <div class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <h3>No notes yet</h3>
+                    <p>Create your first note to get started!</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Editor Panel -->
+        <section class="editor-panel" id="editorPanel">
+            <div class="editor-header">
+                <input 
+                    type="text" 
+                    id="noteTitle" 
+                    class="note-title-input" 
+                    placeholder="Note Title"
+                    autocomplete="off"
+                >
+                <button class="btn-close-editor" id="closeEditor" title="Close editor">✕</button>
+            </div>
+
+            <div class="editor-toolbar">
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" id="boldBtn" title="Bold (Ctrl+B)">
+                        <strong>B</strong>
+                    </button>
+                    <button class="toolbar-btn" id="italicBtn" title="Italic (Ctrl+I)">
+                        <em>I</em>
+                    </button>
+                    <button class="toolbar-btn" id="underlineBtn" title="Underline (Ctrl+U)">
+                        <u>U</u>
+                    </button>
+                    <button class="toolbar-btn" id="strikeBtn" title="Strikethrough">
+                        <s>S</s>
+                    </button>
+                </div>
+                <div class="toolbar-divider"></div>
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" id="codeBtn" title="Code">
+                        {'</'}
+                    </button>
+                    <button class="toolbar-btn" id="quoteBtn" title="Quote">
+                        "
+                    </button>
+                    <button class="toolbar-btn" id="linkBtn" title="Insert Link">
+                        🔗
+                    </button>
+                </div>
+                <div class="toolbar-divider"></div>
+                <div class="toolbar-group">
+                    <select id="categorySelect" class="category-select">
+                        <option value="">Select Category...</option>
+                    </select>
+                    <input type="color" id="colorPicker" class="color-picker" title="Note color">
+                </div>
+            </div>
+
+            <div class="editor-content">
+                <div contenteditable="true" id="noteEditor" class="note-editor" spellcheck="true"></div>
+            </div>
+
+            <div class="editor-footer">
+                <div class="editor-stats">
+                    <span id="wordCount">Words: 0</span>
+                    <span id="charCount">Characters: 0</span>
+                    <span id="lastModified">Saving...</span>
+                </div>
+                <div class="editor-actions">
+                    <button class="btn-secondary" id="discardBtn">Discard</button>
+                    <button class="btn-primary" id="saveBtn">Save Note</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Note Card Modal -->
+        <div class="note-card-popup" id="noteCardPopup">
+            <div class="popup-content">
+                <button class="btn-close-popup" id="closePopup">✕</button>
+                <h3 id="popupTitle"></h3>
+                <div class="popup-body" id="popupBody"></div>
+                <div class="popup-footer">
+                    <small id="popupTime"></small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Overlay -->
+        <div class="modal-overlay" id="modalOverlay"></div>
+
+        <!-- Category Dialog -->
+        <dialog class="dialog" id="categoryDialog">
+            <div class="dialog-content">
+                <h3>Create New Category</h3>
+                <input 
+                    type="text" 
+                    id="categoryInput" 
+                    class="dialog-input" 
+                    placeholder="Category name"
+                    maxlength="30"
+                >
+                <div class="dialog-footer">
+                    <button class="btn-secondary" id="cancelCategoryBtn">Cancel</button>
+                    <button class="btn-primary" id="confirmCategoryBtn">Create</button>
+                </div>
+            </div>
+        </dialog>
+
+        <!-- Settings Dialog -->
+        <dialog class="dialog" id="settingsDialog">
+            <div class="dialog-content">
+                <h3>Settings</h3>
+                <div class="settings-group">
+                    <label>
+                        <input type="checkbox" id="autosaveToggle" checked>
+                        Enable Autosave
+                    </label>
+                    <label>
+                        <input type="checkbox" id="spellcheckToggle" checked>
+                        Enable Spell Check
+                    </label>
+                    <label>
+                        <input type="checkbox" id="compactModeToggle">
+                        Compact Mode
+                    </label>
+                </div>
+                <div class="dialog-footer">
+                    <button class="btn-secondary" id="closeSetting sBtn">Close</button>
+                </div>
+            </div>
+        </dialog>
+
+        <!-- Floating Action Button -->
+        <button class="fab" id="newNoteBtn" title="Create new note (Ctrl+N)">
+            <span>+</span>
+        </button>
+
+        <!-- Keyboard Shortcuts Dialog -->
+        <dialog class="dialog" id="shortcutsDialog">
+            <div class="dialog-content">
+                <h3>Keyboard Shortcuts</h3>
+                <div class="shortcuts-list">
+                    <div class="shortcut-item">
+                        <kbd>Ctrl+N</kbd><span>New Note</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl+/</kbd><span>Focus Search</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl+S</kbd><span>Save Note</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl+B</kbd><span>Bold</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl+I</kbd><span>Italic</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl+U</kbd><span>Underline</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Escape</kbd><span>Close Editor</span>
+                    </div>
+                </div>
+                <div class="dialog-footer">
+                    <button class="btn-primary" id="closeShortcutsBtn">Close</button>
+                </div>
+            </div>
+        </dialog>
+    </div>
+
+    <!-- Hidden input for file import -->
+    <input type="file" id="importFile" accept=".json" style="display: none;">
+
+    <script src="script.js"></script>
+</body>
+</html>
